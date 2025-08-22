@@ -19,6 +19,11 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
+    rules: {
+      "semicolon": "error",
+      "quotes": ["error", "double"],
+      "no-console": "warn",
+    },
   },
 ];
 
