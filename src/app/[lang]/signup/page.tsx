@@ -7,11 +7,17 @@ const signup =async ({params}:{params:Promise<{lang:'en-US'|'es-ES'}>})=>{
 
     return(
     <>
-    <h1>Formulario de Registro</h1>
     <RegisterForm
      formTitle={dict.FormSignup.formTitle}
+     formName={dict.FormSignup.formName}
+     formNamePlaceHolder={dict.FormSignup.formNamePlaceHolder}
+     formLastName={dict.FormSignup.formLastName}
+     formLastNamePlaceHolder={dict.FormSignup.formLastNamePlaceHolder}
      formUser={dict.FormSignup.formUsername}
      formPass={dict.FormSignup.formPass}
+     formEmail={dict.FormSignup.formEmail}
+     formEmailPlaceHolder={dict.FormSignup.formEmailPlaceHolder}
+     formUsername={dict.FormSignup.formUsername}
      formSubmit={dict.FormSignup.formSubmit}
 
     />
