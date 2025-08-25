@@ -19,6 +19,8 @@
         "formTitle":"Inicio de Sesión",
         "formUser":"Usuario",
         "formPass":"Contraseña",
+        "formEmail":"Email",
+        "formEmailPlaceHolder":"Write your email",
         "formSubmit":"Iniciar Sesión"
     }
 }

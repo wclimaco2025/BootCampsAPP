@@ -9,6 +9,8 @@ const login = async ({params}:{params:Promise<{lang:'en-US'|'es-ES'}>}) => {
      <LoginForm 
       formUser={dict.FormLogin.formUser}
       formPass={dict.FormLogin.formPass}
+      formEmail={dict.FormLogin.formEmail}
+      formEmailPlaceHolder={dict.FormLogin.formEmailPlaceHolder}
       formSubmit={dict.FormLogin.formSubmit}
       formTitle={dict.FormLogin.formTitle}
      />

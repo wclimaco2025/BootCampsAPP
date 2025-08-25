@@ -40,3 +40,35 @@ export const signUp = async (
     };
   }
 };
+
+//Iniciar sesión
+export const signIn = async (
+  email: string,
+  password: string
+): Promise<AuthResponse> => {
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    return { data, error };
+  } catch (error) {
+    console.error("Error en Login:", error);
+    return {
+      data: { user: null, session: null },
+      error: error as AuthError,
+    };
+  }
+};
+
+//Cerrar sesión
+export const signOut = async (): Promise<{ error: AuthError | null }> => {
+  try {
+    const { error } = await supabase.auth.signOut();
+    return { error };
+  } catch (error) {
+    console.error("Error en Logout:", error);
+    return { error: error as AuthError };
+  }
+};
