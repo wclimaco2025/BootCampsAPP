@@ -1,0 +1,25 @@
+{
+    "HomePage":{
+        "title":"Bienvenido a la app dime que piensas sobre mi?",
+        "description":"Puedes dejarme un comentario o sugerencia sobre mi personalidad, me gustaría saber tu opinión"
+    },
+    "FormSignup":{
+        "formTitle":"Cuentame que piensas sobre mi",
+        "formName":"Nombre",
+        "formLastName":"Apellido",
+        "formNamePlaceHolder":"Escribe tu nombre",
+        "formLastNamePlaceHolder":"Escribe tu apellido",
+        "formEmail":"Email",
+        "formEmailPlaceHolder":"Escribe tu email",
+        "formMessage":"Mensaje",
+        "formMessagePlaceHolder":"Escribe tu mensaje",
+        "formSubmit":"Guardar Comentario",
+        "formGift":"Regalo"
+    },
+    "FormLogin":{
+        "formTitle":"Inicio de Sesión",
+        "formUser":"Usuario",
+        "formPass":"Contraseña",
+        "formSubmit":"Iniciar Sesión"
+    }
+}

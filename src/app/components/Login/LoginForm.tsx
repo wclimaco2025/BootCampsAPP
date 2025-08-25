@@ -1,14 +1,14 @@
+//Props para la internacionalización
 type TextProps = {
   formTitle:string;
   formUser:string;
   formPass:string;
   formSubmit:string;
 }
+export const LoginForm = (props:TextProps) => {
 
-export const RegisterForm = (props:TextProps) => {
-    return (
-      <>
-      <div>
+  return (<>
+    <div>
       <div className='bg-white shadow-md rounded-lg p-6 max-w-2xl mx-auto'>
       <h2 className='text-2xl font-semibold text-gray-800 mb-4 text-center'>
         {props.formTitle}
@@ -43,6 +43,5 @@ export const RegisterForm = (props:TextProps) => {
       </form>
     </div>
     </div>
-      </>        
-    )
+  </>)  
 }

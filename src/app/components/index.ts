@@ -3,3 +3,4 @@
 export { Header } from "./Header/Header";
 export { Footer } from "./Footer/Footer";
 export { RegisterForm } from "./Register/RegisterForm";
+export { LoginForm} from "./Login/LoginForm";
