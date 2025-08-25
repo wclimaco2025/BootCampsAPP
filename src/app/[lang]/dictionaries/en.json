@@ -3,18 +3,17 @@
         "title":"Welcome to the app, Tell me what do you think about me?",
         "description":"You can leave me a comment or suggestion about my personality, I would like to know your opinion"
     },
-    "Form":{
-        "formTitle":"Tell me what do you think about me",
+    "FormSignup":{
+        "formTitle":"Register Form",
         "formName":"Name",
         "formNamePlaceHolder":"Write your name",
         "formLastName":"Last Name",
         "formLastNamePlaceHolder":"Write your last name",
+        "formUsername":"Write your nickname",
         "formEmail":"Email",
-        "formMessage":"Message",
-        "formSubmit":"Save Comment",
-        "formGift":"Gift",
-        "formEmailPlaceHolder":"Write your email",
-        "formMessagePlaceHolder":"Write your message"
+        "formPass":"Password",
+        "formSubmit":"Register",
+        "formEmailPlaceHolder":"Write your email"
     },
     "FormLogin":{
         "formTitle":"Inicio de Sesión",
