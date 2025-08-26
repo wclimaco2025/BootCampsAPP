@@ -1,4 +1,4 @@
-import { supabase, supabaseApi } from "../api/supabase.api";
+import { supabase } from "../api/supabase.api";
 import type { AuthError, User, Session } from "@supabase/supabase-js";
 
 

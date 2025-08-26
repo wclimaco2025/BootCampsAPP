@@ -46,8 +46,10 @@ export const LoginForm = (props: TextProps) => {
         // Extraer el idioma de la URL actual
         const lang = pathname.split("/")[1]; // Obtiene 'en-US' o 'es-ES'
 
-        // Redireccionar al dashboard con el idioma correcto
-        router.push(`/${lang}/dashboard`);
+        // Usar window.location.href para forzar recarga completa y sincronizar cookies
+        setTimeout(() => {
+          window.location.href = `/${lang}/dashboard`;
+        }, 1000);
       }
     } catch (error) {
       setMessage("Error inesperado durante el login");
