@@ -58,101 +58,109 @@ const buildLocalizedURL = (
 };
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  try {
+    const { pathname } = request.nextUrl;
 
-  // Primero manejar la localización
-  const pathnameHasLocale = locales.some(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  );
+    // Primero manejar la localización
+    const pathnameHasLocale = locales.some(
+      (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    );
 
-  // Si no tiene locale, redirigir con locale
-  if (!pathnameHasLocale) {
-    const locale = getLocale(request);
-    const newUrl = new URL(`/${locale}${pathname}`, request.url);
-    return NextResponse.redirect(newUrl);
-  }
+    // Si no tiene locale, redirigir con locale
+    if (!pathnameHasLocale) {
+      const locale = getLocale(request);
+      const newUrl = new URL(`/${locale}${pathname}`, request.url);
+      return NextResponse.redirect(newUrl);
+    }
 
-  // Autenticación en Supabase (solo para rutas que no son assets)
-  if (
-    !pathname.includes("/_next/") &&
-    !pathname.includes("/api/") &&
-    !pathname.includes("/favicon.ico") &&
-    !pathname.match(/\.(svg|png|jpg|jpeg|gif|webp)$/)
-  ) {
-    // Crear respuesta inicial
-    let response = NextResponse.next({
-      request: {
-        headers: request.headers,
-      },
-    });
+    // Verificar variables de entorno
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll();
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              request.cookies.set(name, value);
-              response.cookies.set(name, value, options);
-            });
-          },
+    if (!supabaseUrl || !supabaseKey) {
+      // Si no hay variables de entorno, solo manejar localización
+      return NextResponse.next();
+    }
+
+    // Autenticación en Supabase (solo para rutas que no son assets)
+    if (
+      !pathname.includes("/_next/") &&
+      !pathname.includes("/api/") &&
+      !pathname.includes("/favicon.ico") &&
+      !pathname.match(/\.(svg|png|jpg|jpeg|gif|webp)$/)
+    ) {
+      // Crear respuesta inicial
+      let response = NextResponse.next({
+        request: {
+          headers: request.headers,
         },
+      });
+
+      try {
+        const supabase = createServerClient(
+          supabaseUrl,
+          supabaseKey,
+          {
+            cookies: {
+              getAll() {
+                return request.cookies.getAll();
+              },
+              setAll(cookiesToSet) {
+                cookiesToSet.forEach(({ name, value, options }) => {
+                  request.cookies.set(name, value);
+                  response.cookies.set(name, value, options);
+                });
+              },
+            },
+          }
+        );
+
+        // Refrescar la sesión si es necesario
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+
+        // Si es ruta protegida y no hay sesión válida
+        if (isProtectedRoute(pathname) && !session) {
+          const currentLocale = getCurrentLocale(pathname) || "es-ES";
+          return NextResponse.redirect(
+            new URL(`/${currentLocale}/login`, request.url)
+          );
+        }
+
+        // Si hay sesión válida y trata de acceder a login/register
+        if (session && isAuthRoute(pathname)) {
+          const currentLocale = getCurrentLocale(pathname) || "es-ES";
+          return NextResponse.redirect(
+            new URL(`/${currentLocale}/dashboard`, request.url)
+          );
+        }
+
+        return response;
+      } catch (authError) {
+        // Si hay error en autenticación, continuar sin bloquear
+        return NextResponse.next();
       }
-    );
-
-    // Refrescar la sesión si es necesario
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    // Debug: Log para verificar cookies y sesión
-    const cookies = request.cookies.getAll();
-    const authCookies = cookies.filter(
-      (cookie) =>
-        cookie.name.includes("supabase") || cookie.name.includes("sb-")
-    );
-
-    console.log("Middleware Debug:", {
-      pathname,
-      hasSession: !!session,
-      sessionError: sessionError?.message,
-      authCookiesCount: authCookies.length,
-      cookieNames: authCookies.map((c) => c.name),
-    });
-
-    // Si es ruta protegida y no hay sesión válida
-    if (isProtectedRoute(pathname) && !session) {
-      const currentLocale = getCurrentLocale(pathname) || "es-ES";
-      console.log("Redirecting to login - No valid session");
-      return NextResponse.redirect(
-        new URL(`/${currentLocale}/login`, request.url)
-      );
     }
 
-    // Si hay sesión válida y trata de acceder a login/register
-    if (session && isAuthRoute(pathname)) {
-      const currentLocale = getCurrentLocale(pathname) || "es-ES";
-      console.log("Redirecting to dashboard - Valid session found");
-      return NextResponse.redirect(
-        new URL(`/${currentLocale}/dashboard`, request.url)
-      );
-    }
-
-    return response;
+    return NextResponse.next();
+  } catch (error) {
+    // Si hay cualquier error, continuar sin bloquear
+    return NextResponse.next();
   }
-
-  return NextResponse.next();
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
   matcher: [
-    // salta todas las rutas internas de nextjs
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder files
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)$).*)",
   ],
 };
