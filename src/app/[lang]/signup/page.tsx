@@ -1,4 +1,4 @@
-import { RegisterForm } from "@/app/components";
+import { Header, RegisterForm } from "@/app/components";
 import { getDictionary } from "../dictionaries";
 
 const signup =async ({params}:{params:Promise<{lang:'en-US'|'es-ES'}>})=>{
@@ -7,6 +7,7 @@ const signup =async ({params}:{params:Promise<{lang:'en-US'|'es-ES'}>})=>{
 
     return(
     <>
+    <Header/>
     <RegisterForm
      formTitle={dict.FormSignup.formTitle}
      formName={dict.FormSignup.formName}
@@ -21,6 +22,7 @@ const signup =async ({params}:{params:Promise<{lang:'en-US'|'es-ES'}>})=>{
      formSubmit={dict.FormSignup.formSubmit}
 
     />
+    
     </>);
 }
 export default signup;

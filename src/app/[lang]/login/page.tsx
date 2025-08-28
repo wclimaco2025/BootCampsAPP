@@ -1,4 +1,4 @@
-import { LoginForm } from "@/app/components";
+import { Footer, Header, LoginForm } from "@/app/components";
 import { getDictionary } from "../dictionaries";
 
 const login = async ({params}:{params:Promise<{lang:'en-US'|'es-ES'}>}) => {
@@ -6,6 +6,7 @@ const login = async ({params}:{params:Promise<{lang:'en-US'|'es-ES'}>}) => {
   const dict = await getDictionary(lang);
   return (
     <>
+    <Header/>
      <LoginForm 
       formUser={dict.FormLogin.formUser}
       formPass={dict.FormLogin.formPass}
